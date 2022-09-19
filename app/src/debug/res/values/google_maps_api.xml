@@ -9,7 +9,7 @@
     string in this file.
     -->
   <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
-    AIzaSyCnVvX7lLfZtz-HEMM_iTokeh0TwTxpAeY
+    google_key
 
   </string>
 </resources>
