@@ -1,5 +1,4 @@
 
-
 package com.raywenderlich.placebook.ui
 
 import android.content.Intent
@@ -24,8 +23,7 @@ import com.raywenderlich.placebook.viewmodel.BookmarkDetailsViewModel
 import java.io.File
 import java.net.URLEncoder
 
-class BookmarkDetailsActivity : AppCompatActivity(),
-    PhotoOptionDialogFragment.PhotoOptionDialogListener {
+class BookmarkDetailsActivity : AppCompatActivity(), PhotoOptionDialogFragment.PhotoOptionDialogListener {
 
     private val bookmarkDetailsViewModel by viewModels<BookmarkDetailsViewModel>()
     private var bookmarkDetailsView: BookmarkDetailsViewModel.BookmarkDetailsView? = null
@@ -42,25 +40,20 @@ class BookmarkDetailsActivity : AppCompatActivity(),
 
         photoFile?.let { photoFile ->
             val photoUri = FileProvider.getUriForFile(this,
-                "com.raywenderlich.placebook.fileprovider",
-                photoFile)
-            val captureIntent =
-                Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                "com.raywenderlich.placebook.fileprovider", photoFile)
+            val captureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-            val intentActivities = packageManager.queryIntentActivities(
-                captureIntent, PackageManager.MATCH_DEFAULT_ONLY)
+            val intentActivities = packageManager.queryIntentActivities(captureIntent, PackageManager.MATCH_DEFAULT_ONLY)
             intentActivities.map { it.activityInfo.packageName }
                 .forEach {
-                    grantUriPermission(it, photoUri,
-                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                    grantUriPermission(it, photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 }
             startActivityForResult(captureIntent, REQUEST_CAPTURE_IMAGE)
         }
     }
 
     override fun onPickClick() {
-        val pickIntent = Intent(Intent.ACTION_PICK,
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val pickIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(pickIntent, REQUEST_GALLERY_IMAGE)
     }
 
@@ -95,16 +88,11 @@ class BookmarkDetailsActivity : AppCompatActivity(),
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == android.app.Activity.RESULT_OK) {
-
             when (requestCode) {
-
                 REQUEST_CAPTURE_IMAGE -> {
-
                     val photoFile = photoFile ?: return
-
                     val uri = FileProvider.getUriForFile(this,
-                        "com.raywenderlich.placebook.fileprovider",
-                        photoFile)
+                        "com.raywenderlich.placebook.fileprovider", photoFile)
                     revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                     val image = getImageWithPath(photoFile.absolutePath)
                     image?.let {
@@ -128,25 +116,17 @@ class BookmarkDetailsActivity : AppCompatActivity(),
     private fun populateCategoryList() {
 
         val bookmarkView = bookmarkDetailsView ?: return
-
         val resourceId = bookmarkDetailsViewModel.getCategoryResourceId(bookmarkView.category)
-
         resourceId?.let { databinding.imageViewCategory.setImageResource(it) }
-
         val categories = bookmarkDetailsViewModel.getCategories()
-
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
         databinding.spinnerCategory.adapter = adapter
-
         val placeCategory = bookmarkView.category
         databinding.spinnerCategory.setSelection(adapter.getPosition(placeCategory))
-
         databinding.spinnerCategory.post {
             databinding.spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-
                     val category = parent.getItemAtPosition(position) as String
                     val resourceId = bookmarkDetailsViewModel.getCategoryResourceId(category)
                     resourceId?.let {
@@ -162,12 +142,9 @@ class BookmarkDetailsActivity : AppCompatActivity(),
     }
 
     private fun getImageWithAuthority(uri: Uri): Bitmap? {
-        return ImageUtils.decodeUriStreamToSize(uri,
-            resources.getDimensionPixelSize(
-                R.dimen.default_image_width),
-            resources.getDimensionPixelSize(
-                R.dimen.default_image_height),
-            this)
+        return ImageUtils.decodeUriStreamToSize(uri, resources.getDimensionPixelSize(
+                R.dimen.default_image_width), resources.getDimensionPixelSize(
+                R.dimen.default_image_height), this)
     }
 
     private fun updateImage(image: Bitmap) {
@@ -177,10 +154,8 @@ class BookmarkDetailsActivity : AppCompatActivity(),
     }
 
     private fun getImageWithPath(filePath: String): Bitmap? {
-        return ImageUtils.decodeFileToSize(filePath,
-            resources.getDimensionPixelSize(
-                R.dimen.default_image_width),
-            resources.getDimensionPixelSize(
+        return ImageUtils.decodeFileToSize(filePath, resources.getDimensionPixelSize(
+                R.dimen.default_image_width), resources.getDimensionPixelSize(
                 R.dimen.default_image_height))
     }
 
@@ -208,9 +183,7 @@ class BookmarkDetailsActivity : AppCompatActivity(),
     private fun deleteBookmark()
     {
         val bookmarkView = bookmarkDetailsView ?: return
-        AlertDialog.Builder(this)
-            .setMessage("Delete?")
-            .setPositiveButton("Ok") { _, _ ->
+        AlertDialog.Builder(this).setMessage("Delete?").setPositiveButton("Ok") { _, _ ->
                 bookmarkDetailsViewModel.deleteBookmark(bookmarkView)
                 finish() }
             .setNegativeButton("Cancel", null)
@@ -269,27 +242,20 @@ class BookmarkDetailsActivity : AppCompatActivity(),
         var mapUrl = ""
         if (bookmarkView.placeId == null) {
 
-            val location = URLEncoder.encode("${bookmarkView.latitude},"
-                    + "${bookmarkView.longitude}", "utf-8")
-            mapUrl = "https://www.google.com/maps/dir/?api=1" +
-                    "&destination=$location"
-        } else { // 4
+            val location = URLEncoder.encode("${bookmarkView.latitude}," +
+                    "${bookmarkView.longitude}", "utf-8")
+            mapUrl = "https://www.google.com/maps/dir/?api=1" + "&destination=$location"
+        } else {
             val name = URLEncoder.encode(bookmarkView.name, "utf-8")
             mapUrl = "https://www.google.com/maps/dir/?api=1" +
-                    "&destination=$name&destination_place_id=" +
-                    "${bookmarkView.placeId}"
+                    "&destination=$name&destination_place_id=" + "${bookmarkView.placeId}"
         }
 
         val sendIntent = Intent()
         sendIntent.action = Intent.ACTION_SEND
-
-        sendIntent.putExtra(Intent.EXTRA_TEXT,
-            "Check out ${bookmarkView.name} at:\n$mapUrl")
-        sendIntent.putExtra(Intent.EXTRA_SUBJECT,
-            "Sharing ${bookmarkView.name}")
-
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "Check out ${bookmarkView.name} at:\n$mapUrl")
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Sharing ${bookmarkView.name}")
         sendIntent.type = "text/plain"
-
         startActivity(sendIntent)
     }
 

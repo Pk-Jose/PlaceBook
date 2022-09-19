@@ -1,5 +1,4 @@
 
-
 package com.raywenderlich.placebook.model
 
 import android.content.Context
@@ -24,8 +23,7 @@ data class Bookmark(
 
     fun setImage(image: Bitmap, context: Context) {
         id?.let {
-            ImageUtils.saveBitmapToFile(context, image,
-                generateImageFilename(it))
+            ImageUtils.saveBitmapToFile(context, image, generateImageFilename(it))
         }
     }
 

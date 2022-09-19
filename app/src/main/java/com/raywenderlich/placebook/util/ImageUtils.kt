@@ -26,11 +26,8 @@ object ImageUtils {
     fun saveBitmapToFile(context: Context, bitmap: Bitmap, filename: String) {
 
         val stream = ByteArrayOutputStream()
-
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-
         val bytes = stream.toByteArray()
-
         saveBytesToFile(context, bytes, filename)
     }
 
@@ -55,12 +52,8 @@ object ImageUtils {
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
         BitmapFactory.decodeFile(filePath, options)
-
-        options.inSampleSize = calculateInSampleSize(
-            options.outWidth, options.outHeight, width, height)
-
+        options.inSampleSize = calculateInSampleSize(options.outWidth, options.outHeight, width, height)
         options.inJustDecodeBounds = false
-
         return BitmapFactory.decodeFile(filePath, options)
     }
 
@@ -81,12 +74,10 @@ object ImageUtils {
                 inputStream.close()
                 inputStream = context.contentResolver.openInputStream(uri)
                 if (inputStream != null) {
-                    options.inSampleSize = calculateInSampleSize(
-                        options.outWidth, options.outHeight,
+                    options.inSampleSize = calculateInSampleSize(options.outWidth, options.outHeight,
                         width, height)
                     options.inJustDecodeBounds = false
-                    val bitmap = BitmapFactory.decodeStream(
-                        inputStream, null, options)
+                    val bitmap = BitmapFactory.decodeStream(inputStream, null, options)
                     inputStream.close()
                     return bitmap
                 }

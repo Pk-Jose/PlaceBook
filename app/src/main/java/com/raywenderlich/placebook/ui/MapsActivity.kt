@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2020 Razeware LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
- * distribute, sublicense, create a derivative work, and/or sell copies of the
- * Software in any work that is designed, intended, or marketed for pedagogical or
- * instructional purposes related to programming, coding, application development,
- * or information technology.  Permission for such use, copying, modification,
- * merger, publication, distribution, sublicensing, creation of derivative works,
- * or sale is expressly withheld.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
 
 package com.raywenderlich.placebook.ui
 
@@ -88,8 +59,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     databinding = ActivityMapsBinding.inflate(layoutInflater)
     setContentView(databinding.root)
 
-    val mapFragment = supportFragmentManager
-      .findFragmentById(R.id.map) as SupportMapFragment
+    val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
     mapFragment.getMapAsync(this)
 
     setupLocationClient()
@@ -105,26 +75,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     getCurrentLocation()
   }
 
-  override fun onActivityResult(
-    requestCode: Int,
-    resultCode: Int,
-    data: Intent?
-  ) {
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    // 1
+
     when (requestCode) {
       AUTOCOMPLETE_REQUEST_CODE ->
-        // 2
         if (resultCode == Activity.RESULT_OK && data != null) {
-          // 3
           val place = Autocomplete.getPlaceFromIntent(data)
-          // 4
           val location = Location("")
           location.latitude = place.latLng?.latitude ?: 0.0
           location.longitude = place.latLng?.longitude ?: 0.0
           updateMapToLocation(location)
           showProgress()
-          // 5
           displayPoiGetPhotoStep(place)
         }
     }
@@ -138,8 +100,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
   private fun setupToolbar() {
     setSupportActionBar(databinding.mainMapView.toolbar)
     val toggle = ActionBarDrawerToggle(
-      this, databinding.drawerLayout, databinding.mainMapView.toolbar,
-      R.string.open_drawer, R.string.close_drawer)
+      this, databinding.drawerLayout, databinding.mainMapView.toolbar, R.string.open_drawer, R.string.close_drawer)
     toggle.syncState()
   }
 
@@ -186,10 +147,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
       }.addOnFailureListener { exception ->
         if (exception is ApiException) {
           val statusCode = exception.statusCode
-          Log.e(TAG,
-            "Place not found: " +
-                    exception.message + ", " +
-                    "statusCode: " + statusCode)
+          Log.e(TAG, "Place not found: " + exception.message + ", " + "statusCode: " + statusCode)
           hideProgress()
         }
       }
@@ -323,8 +281,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
   private fun requestLocationPermissions() {
     ActivityCompat.requestPermissions(this,
-      arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-      REQUEST_LOCATION)
+      arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
   }
 
   private fun setupNavigationDrawer() {
@@ -342,9 +299,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
   fun moveToBookmark(bookmark: MapsViewModel.BookmarkView) {
 
     databinding.drawerLayout.closeDrawer(databinding.drawerViewMaps.drawerView)
-
     val marker = markers[bookmark.id]
-
     marker?.showInfoWindow()
 
     val location = Location("")

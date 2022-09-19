@@ -1,5 +1,4 @@
 
-
 package com.raywenderlich.placebook.adapter
 
 import android.app.Activity
@@ -25,19 +24,16 @@ class BookmarkInfoWindowAdapter(val context: Activity) : GoogleMap.InfoWindowAda
 
     override fun getInfoContents(marker: Marker): View {
         binding.title.text = marker.title ?: ""
-
         binding.phone.text = marker.snippet ?: ""
 
         val imageView = binding.photo
         when (marker.tag) {
             is MapsActivity.PlaceInfo -> {
-                imageView.setImageBitmap(
-                    (marker.tag as MapsActivity.PlaceInfo).image)
+                imageView.setImageBitmap((marker.tag as MapsActivity.PlaceInfo).image)
             }
             is MapsViewModel.BookmarkView -> {
                 val bookMarkview = marker.tag as
                         MapsViewModel.BookmarkView
-                // Set imageView bitmap here
                 imageView.setImageBitmap(bookMarkview.getImage(context))
             }
         }

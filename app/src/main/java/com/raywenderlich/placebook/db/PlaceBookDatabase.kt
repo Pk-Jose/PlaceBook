@@ -17,7 +17,6 @@ abstract class PlaceBookDatabase : RoomDatabase() {
 
         fun getInstance(context: Context): PlaceBookDatabase {
             if (instance == null) {
-                // 6
                 instance = Room.databaseBuilder(context.applicationContext,
                     PlaceBookDatabase::class.java, "PlaceBook")
                     .fallbackToDestructiveMigration()
